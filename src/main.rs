@@ -1,6 +1,7 @@
 use core::time::Duration;
 use rodio::{OutputStream, source::Source};
 
+#[derive(Clone)]
 struct WavetableOscillator {
     sample_rate: u32,
     wave_table: Vec<f32>,
@@ -64,12 +65,29 @@ impl Iterator for WavetableOscillator {
     }
 }
 
+fn play_oscillator(oscillator1: WavetableOscillator, oscillator2: WavetableOscillator, oscillator3: WavetableOscillator, frequency1: f32, frequency2: f32, frequency3: f32) -> (WavetableOscillator, WavetableOscillator, WavetableOscillator){
+    let mut temp_oscillator1 = WavetableOscillator::new(oscillator1.sample_rate.clone(), oscillator1.wave_table.clone());
+    let mut temp_oscillator2 = WavetableOscillator::new(oscillator2.sample_rate.clone(), oscillator2.wave_table.clone());
+    let mut temp_oscillator3 = WavetableOscillator::new(oscillator3.sample_rate.clone(), oscillator3.wave_table.clone());
+    temp_oscillator1.set_frequency(frequency1);
+    temp_oscillator2.set_frequency(frequency2);
+    temp_oscillator3.set_frequency(frequency3);
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+    let _result = stream_handle.play_raw(temp_oscillator1.convert_samples());
+    let _result = stream_handle.play_raw(temp_oscillator2.convert_samples());
+    let _result = stream_handle.play_raw(temp_oscillator3.convert_samples());
+    std::thread::sleep(std::time::Duration::from_secs(3));
+    (oscillator1,oscillator2,oscillator3)
+}
+
 fn main() {
 
     //stating wavetable size and declaring wavetable vectors
     let wave_table_size = 64;
     let mut sine_wave_table: Vec<f32> = Vec::with_capacity(wave_table_size);
     let mut square_wave_table: Vec<f32> = Vec::with_capacity(wave_table_size);
+    let mut saw_wave_table: Vec<f32> = Vec::with_capacity(wave_table_size);
+    let mut wavetable_function_saw: f32 = 1.0;
     
     for n in 0..wave_table_size {
 
@@ -79,22 +97,27 @@ fn main() {
         //pushes the sine wave data to the sine wavetable for each iteration
         sine_wave_table.push(wavetable_function_sine);
 
+        //pushes the sign of the current value of wavetable_function_sine as -1 or 1
+        //this creates a square wave for the square wavetable
         if wavetable_function_sine >= 0.0 {
             square_wave_table.push(1.0);
-            println!("1.0");
         }
         else {
             square_wave_table.push(-1.0);
-            println!("-1.0");
         }
+
+        println!("{}",wavetable_function_saw);
+        wavetable_function_saw = wavetable_function_saw - (1.0/wave_table_size as f32);
+        saw_wave_table.push(wavetable_function_saw);
     }
 
+    //creating oscillators with associated sample rates and wavetables
     let mut sine_oscillator = WavetableOscillator::new(44100, sine_wave_table);
     let mut square_oscillator = WavetableOscillator::new(44100, square_wave_table);
+    let mut saw_oscillator = WavetableOscillator::new(44100, saw_wave_table);
 
-    sine_oscillator.set_frequency(440.0);
-    square_oscillator.set_frequency(440.0);
-    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-    let _result = stream_handle.play_raw(square_oscillator.convert_samples());
-    std::thread::sleep(std::time::Duration::from_secs(1));
+    (sine_oscillator,square_oscillator,saw_oscillator) = play_oscillator(sine_oscillator, square_oscillator, saw_oscillator, 262.0, 263.5, 260.5);
+    (sine_oscillator,square_oscillator,saw_oscillator) = play_oscillator(sine_oscillator, square_oscillator, saw_oscillator, 393.0, 394.5, 391.5);
+    (sine_oscillator,square_oscillator,saw_oscillator) = play_oscillator(sine_oscillator, square_oscillator, saw_oscillator, 436.7, 438.2, 435.2);
+    play_oscillator(sine_oscillator, square_oscillator, saw_oscillator, 349.3, 350.8, 347.8);
 }
