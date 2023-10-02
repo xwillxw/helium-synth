@@ -65,17 +65,36 @@ impl Iterator for WavetableOscillator {
 }
 
 fn main() {
+
+    //stating wavetable size and declaring wavetable vectors
     let wave_table_size = 64;
     let mut sine_wave_table: Vec<f32> = Vec::with_capacity(wave_table_size);
-    let mut tri_wave_table: Vec<f32> = Vec::with_capacity(wave_table_size);
+    let mut square_wave_table: Vec<f32> = Vec::with_capacity(wave_table_size);
+    
     for n in 0..wave_table_size {
-        sine_wave_table.push((2.0 * std::f32::consts::PI * n as f32 / wave_table_size as f32).sin());
-        tri_wave_table.push((2.0 * std::f32::consts::PI * n as f32 / wave_table_size as f32).sin());
+
+        //creates a sine wave of aplitude 1 and period of wave_table_size
+        let wavetable_function_sine = (2.0 * std::f32::consts::PI * n as f32 / wave_table_size as f32).sin(); 
+
+        //pushes the sine wave data to the sine wavetable for each iteration
+        sine_wave_table.push(wavetable_function_sine);
+
+        if wavetable_function_sine >= 0.0 {
+            square_wave_table.push(1.0);
+            println!("1.0");
+        }
+        else {
+            square_wave_table.push(-1.0);
+            println!("-1.0");
+        }
     }
+
     let mut sine_oscillator = WavetableOscillator::new(44100, sine_wave_table);
-    let mut tri_oscillator = WavetableOscillator::new(44100, tri_wave_table);
+    let mut square_oscillator = WavetableOscillator::new(44100, square_wave_table);
+
     sine_oscillator.set_frequency(440.0);
+    square_oscillator.set_frequency(440.0);
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-    let _result = stream_handle.play_raw(sine_oscillator.convert_samples());
+    let _result = stream_handle.play_raw(square_oscillator.convert_samples());
     std::thread::sleep(std::time::Duration::from_secs(1));
 }
