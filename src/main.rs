@@ -7,8 +7,6 @@ fn main() {
 
     //Generating oscillator types
     let (sine,square,saw) = startup::generate_oscillators();
-
-    output::play_oscillator(sine, note_array[50]);
-    output::play_oscillator(square, note_array[50]);
-    output::play_oscillator(saw, note_array[50]);
+    
+    output::play_oscillator(&sine, note_array[50]);
 }
