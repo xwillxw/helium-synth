@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 rodio = "0.17.1"
+lowpass-filter = "0.3.2"
