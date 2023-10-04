@@ -6,3 +6,4 @@ a hobby project by willow hamid-goodwin
 - Monophonic synthesis with set constant note duration
 - Dynamically generated array of notes
 - Sine, Square and Saw oscillators
+- Low pass filter with a static cutoff frequency
