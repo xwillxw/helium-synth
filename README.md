@@ -7,4 +7,4 @@ a hobby project by willow hamid-goodwin
 - Dynamically generated array of notes
 - Sine, Square and Saw oscillators
 - Adjustable note duration
-- Low pass filter with cutoff frequency
+- Low pass filter with adjustable cutoff frequency
