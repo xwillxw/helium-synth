@@ -11,7 +11,7 @@ pub fn play_oscillator(oscillator_type: &WavetableOscillator, note: Note){
 
     //applying processing
 
-    let oscillator = filter::filter(oscillator, 500);
+    let oscillator = filter::filter(oscillator, 20000);
 
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
 
