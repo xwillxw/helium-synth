@@ -1,6 +1,7 @@
 use core::time::Duration;
 use rodio::source::Source;
 
+
 pub struct WavetableOscillator {
     pub sample_rate: u32,
     pub wave_table: Vec<f32>,
@@ -9,6 +10,7 @@ pub struct WavetableOscillator {
 }
 
 #[derive(Copy, Clone)]
+#[allow(dead_code)]
 pub struct Note {
     name: char,
     accidental: bool,
@@ -185,6 +187,7 @@ pub fn generate_oscillators() -> (WavetableOscillator, WavetableOscillator, Wave
     }
 
     //creating oscillators with associated sample rates and wavetables
+    
 
     let sine_oscillator = WavetableOscillator::new(44100, sine_wave_table);
     let square_oscillator = WavetableOscillator::new(44100, square_wave_table);
