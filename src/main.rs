@@ -17,5 +17,10 @@ fn main() {
     notes.push(note_array[50]);
     notes.push(note_array[54]);
     notes.push(note_array[57]);
-    output::play_oscillator(&square, notes);
+    output::play_oscillator(&square, &notes, 100, 20000);
+    notes.clear();
+    notes.push(note_array[52]);
+    notes.push(note_array[54]);
+    notes.push(note_array[57]);
+    output::play_oscillator(&square, &notes, 1000, 20000);
 }
