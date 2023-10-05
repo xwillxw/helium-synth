@@ -1,11 +1,10 @@
-#![ allow(unused_variables)]
-use processing::filter::FilterType;
-use processing::filter::Filter;
+#![allow(unused_variables)]
 use startup::Note;
+use processing::filter_processor::{Filter,FilterType};
 mod startup;
 mod output;
 mod processing {
-    pub mod filter;
+    pub mod filter_processor;
 }
 
 fn main() {
@@ -17,22 +16,25 @@ fn main() {
     let (sine,square,saw) = startup::generate_oscillators();
     let mut notes: Vec<Note> = Vec::new();
 
-    //changing filter type
-    Filter::filter_settings(FilterType::LP);
+    //Generating default filter
+    let current_filter: Filter = Filter::new(FilterType::LP,5000);
+
 
     //playing music
     notes.push(note_array[50]);
     notes.push(note_array[54]);
     notes.push(note_array[57]);
-    output::play_oscillator(&square, &notes, 100, 20000);
+    output::play_oscillator(&square, &notes, 1000, &current_filter);
 
     //changing filter type
-    Filter::filter_settings(FilterType::HP);
+    println!("filter changed");
+    let current_filter: Filter = Filter::new(FilterType::HP,5000);
 
     //playing music
     notes.clear();
     notes.push(note_array[52]);
     notes.push(note_array[54]);
     notes.push(note_array[57]);
-    output::play_oscillator(&square, &notes, 1000, 20000);
+    output::play_oscillator(&square, &notes, 1000, &current_filter);
+
 }
