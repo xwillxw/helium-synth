@@ -1,5 +1,5 @@
 #![ allow(unused_variables)]
-
+use startup::Note;
 mod startup;
 mod output;
 mod processing {
@@ -13,6 +13,14 @@ fn main() {
 
     //Generating oscillator types
     let (sine,square,saw) = startup::generate_oscillators();
-    
-    output::play_oscillator(&square, note_array[14]);
+    let mut notes: Vec<Note> = Vec::new();
+    notes.push(note_array[50]);
+    notes.push(note_array[54]);
+    notes.push(note_array[57]);
+    output::play_oscillator(&square, &notes, 100, 20000);
+    notes.clear();
+    notes.push(note_array[52]);
+    notes.push(note_array[54]);
+    notes.push(note_array[57]);
+    output::play_oscillator(&square, &notes, 1000, 20000);
 }
