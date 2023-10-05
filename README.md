@@ -1,5 +1,5 @@
 # breezewave
-### v0.0.1
+### v0.0.2
 lightweight wavetable synth created using rust <br>
 a hobby project by willow hamid-goodwin
 >  please note, this is a work in progress, it will become a more fleshed out project given time
@@ -8,4 +8,4 @@ a hobby project by willow hamid-goodwin
 - Dynamically generated array of notes
 - Sine, Square and Saw oscillators
 - Adjustable note duration
-- Low pass filter with adjustable cutoff frequency
+- Low and high pass filters with adjustable cutoff frequency
