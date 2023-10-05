@@ -1,5 +1,4 @@
 #![ allow(unused_variables)]
-use std::vec::Vec;
 use startup::Note;
 mod startup;
 mod output;
@@ -18,5 +17,5 @@ fn main() {
     notes.push(note_array[50]);
     notes.push(note_array[54]);
     notes.push(note_array[57]);
-    output::play_oscillator(&square, notes[1]);
+    output::play_oscillator(&square, notes);
 }
