@@ -1,4 +1,4 @@
-# ARCHREX helium
+# xw helium
 ### v0.0.2
 lightweight wavetable synth created using rust <br>
 a hobby project by willow hamid-goodwin
