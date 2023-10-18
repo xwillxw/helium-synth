@@ -1,5 +1,6 @@
 use core::time::Duration;
 use rodio::source::Source;
+use crate::processing::filter_processor::{Filter,FilterType};
 
 
 pub struct WavetableOscillator {
@@ -16,6 +17,12 @@ pub struct Note {
     accidental: bool,
     pub frequency: f32,
     octave: i32,
+}
+
+#[allow(dead_code)]
+pub struct SynthPatch {
+    pub oscillator_type: WavetableOscillator,
+    pub filter: Filter,
 }
 
 impl WavetableOscillator {
@@ -85,6 +92,14 @@ impl Note {
     }
 }
 
+impl SynthPatch {
+    pub fn new(oscillator_type: WavetableOscillator, filter: Filter) -> SynthPatch {
+        return SynthPatch {
+            oscillator_type: oscillator_type,
+            filter: filter
+        };
+    }
+}
 pub fn generate_notes() -> [Note; 108] {
     //note creation
     let mut note_array: [Note; 108] = [Note::new('a', false, 27.50, 0); 108];
@@ -152,6 +167,7 @@ pub fn generate_notes() -> [Note; 108] {
 }
 
 pub fn generate_oscillators() -> (WavetableOscillator, WavetableOscillator, WavetableOscillator) {
+
     //stating wavetable size and declaring wavetable vectors
 
     let wave_table_size = 64;
@@ -193,4 +209,15 @@ pub fn generate_oscillators() -> (WavetableOscillator, WavetableOscillator, Wave
     let square_oscillator = WavetableOscillator::new(44100, square_wave_table);
     let saw_oscillator = WavetableOscillator::new(44100, saw_wave_table);
     (sine_oscillator, square_oscillator, saw_oscillator)
+}
+
+pub fn generate_patch() -> SynthPatch {
+
+    let (sine,square,saw) = generate_oscillators();
+
+    let current_filter: Filter = Filter::new(FilterType::LP,5000);
+
+    let current_patch = SynthPatch::new(square, current_filter);
+
+    current_patch
 }
