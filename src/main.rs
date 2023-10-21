@@ -1,7 +1,8 @@
 #![allow(unused_imports,unused_variables,dead_code)]
 use std::time::Instant;
+use rodio::OutputStream;
 use startup::{Note, WavetableOscillator, generate_oscillators};
-use processing::filter_processor::Filter;
+use startup::Filter;
 use crate::startup::generate_patch;
 mod startup;
 mod output;
@@ -15,7 +16,10 @@ pub struct SynthPatch {
 }
 
 fn main() {
-    
+    //let now = Instant::now();
+    //println!("Elapsed: {:.2?}", elapsed);
+    //notes.clear();
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     
     let (sine, square, saw) = generate_oscillators();
     let mut patch = generate_patch();
@@ -25,8 +29,41 @@ fn main() {
     patch.filter.filter_cutoff = 10000;
     
     
-
-    notes.push(note_array[24]);
-    output::play_oscillator(&patch, &notes, 1000);
+    
+    notes.push(note_array[50]);
+    notes.push(note_array[50]);
+    output::play_oscillator(&patch, &notes, 200, &stream_handle);
     notes.clear();
+    
+    notes.push(note_array[52]);
+    notes.push(note_array[50]);
+    output::play_oscillator(&patch, &notes, 200, &stream_handle);
+    notes.clear();
+
+    notes.push(note_array[53]);
+    notes.push(note_array[50]);
+    output::play_oscillator(&patch, &notes, 200, &stream_handle);
+    notes.clear();
+
+    notes.push(note_array[55]);
+    notes.push(note_array[62]);
+    output::play_oscillator(&patch, &notes, 200, &stream_handle);
+    notes.clear();
+
+    notes.push(note_array[52]);
+    notes.push(note_array[59]);
+    output::play_oscillator(&patch, &notes, 400, &stream_handle);
+    notes.clear();
+
+    notes.push(note_array[48]);
+    notes.push(note_array[55]);
+    output::play_oscillator(&patch, &notes, 200, &stream_handle);
+    notes.clear();
+
+    notes.push(note_array[50]);
+    notes.push(note_array[57]);
+    output::play_oscillator(&patch, &notes, 400, &stream_handle);
+    notes.clear();
+
+   
 }

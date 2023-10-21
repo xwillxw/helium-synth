@@ -1,7 +1,9 @@
+use std::path;
 use std::time::{Instant, Duration};
 
+use rodio::source::SineWave;
 //use std::time::Instant;
-use rodio::OutputStream;
+use rodio::{OutputStream, OutputStreamHandle, Sink};
 use rodio::{source::Source, PlayError};
 use crate::startup::SynthPatch;
 use crate::startup::WavetableOscillator;
@@ -9,20 +11,30 @@ use crate::startup::Note;
 use crate::processing::filter_processor;
 
 #[inline]
-pub fn play_oscillator(patch: &SynthPatch, notes: &Vec<Note>, duration: u64){
-    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+pub fn play_oscillator(patch: &SynthPatch, notes: &Vec<Note>, duration: u64, stream_handle: &OutputStreamHandle) {
+
+    let sink = Sink::try_new(&stream_handle).unwrap();
+    let mut global_oscillator = patch.oscillator_type.clone();
+    let mut oscillator_stack_index: f32 = 0.0;
+    let mut oscillator_stack_index_increment: f32 = 0.0;
+
     for i in 0..notes.len() {
-        let mut oscillator = WavetableOscillator::new(patch.oscillator_type.sample_rate.clone(), patch.oscillator_type.wave_table.clone());
+
+        let mut oscillator = patch.oscillator_type.clone();
         oscillator.set_frequency(notes[i].frequency);
-        let oscillator = filter_processor::apply_filter(oscillator, &patch.filter);
-        let oscillator = oscillator.convert_samples::<f32>();
-        let oscillator = stream_handle.play_raw(oscillator);
-        let _result: &Result<(), PlayError> = &oscillator;
+        oscillator.apply_filter(&patch.filter);
+        oscillator_stack_index = oscillator_stack_index + oscillator.index;
+        oscillator_stack_index_increment = oscillator_stack_index_increment + oscillator.index;
+        
     }
-    std::thread::sleep(std::time::Duration::from_millis(duration));
-    let now = Instant::now();
-    drop(stream_handle); drop(_stream);
-    let elapsed = now.elapsed().as_millis();
-    println!("Elapsed: {:.2?}", elapsed);
     
+    global_oscillator.index = oscillator_stack_index;
+    global_oscillator.index_increment = oscillator_stack_index_increment;
+
+    sink.append(global_oscillator.take_duration(Duration::from_millis(duration)));
+    sink.sleep_until_end();
+
+    //let now = Instant::now();
+    //let elapsed = now.elapsed().as_millis();
+    //println!("Elapsed: {:.2?}", elapsed);
 }

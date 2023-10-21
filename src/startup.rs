@@ -1,13 +1,18 @@
 use core::time::Duration;
-use rodio::source::Source;
-use crate::processing::filter_processor::{Filter,FilterType};
+use rodio::source::{Source, BltFilter};
 
+#[allow(dead_code)]
+pub enum FilterType {
+    LP,
+    HP,
+}
 
+#[derive(Clone)]
 pub struct WavetableOscillator {
     pub sample_rate: u32,
     pub wave_table: Vec<f32>,
-    index: f32,
-    index_increment: f32,
+    pub index: f32,
+    pub index_increment: f32,
 }
 
 #[derive(Copy, Clone)]
@@ -23,6 +28,20 @@ pub struct Note {
 pub struct SynthPatch {
     pub oscillator_type: WavetableOscillator,
     pub filter: Filter,
+}
+
+pub struct Filter {
+    pub filter_type: FilterType,
+    pub filter_cutoff: u32
+}
+
+impl Filter {
+    pub fn new(new_filter_type: FilterType, new_filter_cutoff: u32) -> Filter {
+        return Filter {
+            filter_type: new_filter_type,
+            filter_cutoff: new_filter_cutoff,
+        };
+    }
 }
 
 impl WavetableOscillator {
@@ -57,6 +76,19 @@ impl WavetableOscillator {
         let truncated_index_weight = 1.0 - next_index_weight;
         return truncated_index_weight * self.wave_table[truncated_index] + next_index_weight * self.wave_table[next_index];
     }
+
+    pub fn apply_filter(&mut self, current_filter: &Filter) -> BltFilter<WavetableOscillator>{
+
+        let filtered_oscillator: BltFilter<WavetableOscillator>;
+    
+        match &current_filter.filter_type {
+            FilterType::LP => filtered_oscillator = self.clone().low_pass(current_filter.filter_cutoff),
+            FilterType::HP => filtered_oscillator = self.clone().high_pass(current_filter.filter_cutoff),
+        };
+        
+        filtered_oscillator
+    }
+
 } 
 
 impl Source for WavetableOscillator {
@@ -105,6 +137,7 @@ impl SynthPatch {
         };
     }
 }
+
 pub fn generate_notes() -> [Note; 108] {
     //note creation
     let mut note_array: [Note; 108] = [Note::new('a', false, 27.50, 0); 108];
