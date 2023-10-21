@@ -27,16 +27,6 @@ fn main() {
     
 
     notes.push(note_array[24]);
-    let now = output::play_oscillator(&patch, &notes, 1000);
+    output::play_oscillator(&patch, &notes, 1000);
     notes.clear();
-
-    let elapsed = now.elapsed().as_millis();
-    println!("Elapsed: {:.2?}", elapsed);
-    
-    notes.push(note_array[26]);
-    let now = output::play_oscillator(&patch, &notes, 1000);
-    notes.clear();
-    
-    let elapsed = now.elapsed().as_millis();
-    println!("Elapsed: {:.2?}", elapsed);
 }
