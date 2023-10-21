@@ -3,12 +3,16 @@ use crate::startup::SynthPatch;
 use crate::startup::WavetableOscillator;
 use crate::startup::Note;
 use crate::processing::filter_processor;
+use std::time::Instant;
 
 
 pub fn play_oscillator(patch: &SynthPatch, notes: &Vec<Note>, duration: u64){
+    
+    let now = Instant::now();
 
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
 
+    
     for i in 0..notes.len() {
         let mut oscillator = WavetableOscillator::new(patch.oscillator_type.sample_rate.clone(), patch.oscillator_type.wave_table.clone());
         oscillator.set_frequency(notes[i].frequency);
@@ -17,6 +21,9 @@ pub fn play_oscillator(patch: &SynthPatch, notes: &Vec<Note>, duration: u64){
         let oscillator = stream_handle.play_raw(oscillator);
         let _result: &Result<(), PlayError> = &oscillator;
     }
+
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 
     std::thread::sleep(std::time::Duration::from_millis(duration));
 

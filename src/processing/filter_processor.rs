@@ -2,15 +2,15 @@ use crate::startup::WavetableOscillator;
 use rodio::source::Source;
 use rodio::source::BltFilter;
 
-
+#[allow(dead_code)]
 pub enum FilterType {
     LP,
     HP,
 }
 
 pub struct Filter {
-    filter_type: FilterType,
-    filter_cutoff: u32
+    pub filter_type: FilterType,
+    pub filter_cutoff: u32
 }
 
 impl Filter {

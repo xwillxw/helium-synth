@@ -1,5 +1,5 @@
 #![allow(unused_variables)]
-use startup::{Note, WavetableOscillator};
+use startup::{Note, WavetableOscillator, generate_oscillators};
 use processing::filter_processor::Filter;
 
 use crate::startup::generate_patch;
@@ -16,20 +16,16 @@ pub struct SynthPatch {
 }
 
 fn main() {
-
-    let patch = generate_patch();
+    let (sine, square, saw) = generate_oscillators();
+    let mut patch = generate_patch();
     let note_array = startup::generate_notes();
     let mut notes: Vec<Note> = Vec::new();
+    patch.oscillator_type = square;
+    patch.filter.filter_cutoff = 10000;
+    
 
-    notes.push(note_array[50]);
-    notes.push(note_array[54]);
-    notes.push(note_array[57]);
+    notes.push(note_array[24]);
     output::play_oscillator(&patch, &notes, 1000);
 
     notes.clear();
-    notes.push(note_array[52]);
-    notes.push(note_array[54]);
-    notes.push(note_array[57]);
-    output::play_oscillator(&patch, &notes, 1000);
-
 }
