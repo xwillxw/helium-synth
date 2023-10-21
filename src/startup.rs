@@ -1,7 +1,11 @@
 use core::time::Duration;
 use rodio::source::{Source, BltFilter};
 
-use crate::processing::filter_processor::{Filter,FilterType};
+#[allow(dead_code)]
+pub enum FilterType {
+    LP,
+    HP,
+}
 
 #[derive(Clone)]
 pub struct WavetableOscillator {
@@ -24,6 +28,20 @@ pub struct Note {
 pub struct SynthPatch {
     pub oscillator_type: WavetableOscillator,
     pub filter: Filter,
+}
+
+pub struct Filter {
+    pub filter_type: FilterType,
+    pub filter_cutoff: u32
+}
+
+impl Filter {
+    pub fn new(new_filter_type: FilterType, new_filter_cutoff: u32) -> Filter {
+        return Filter {
+            filter_type: new_filter_type,
+            filter_cutoff: new_filter_cutoff,
+        };
+    }
 }
 
 impl WavetableOscillator {

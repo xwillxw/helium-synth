@@ -1,14 +1,11 @@
 #![allow(unused_imports,unused_variables,dead_code)]
 use std::time::Instant;
 use rodio::OutputStream;
-use startup::{Note, WavetableOscillator, generate_oscillators};
-use processing::filter_processor::{Filter, FilterType};
+use startup::{Note, WavetableOscillator, generate_oscillators, Filter, FilterType};
 use crate::startup::generate_patch;
 mod startup;
 mod output;
-mod processing {
-    pub mod filter_processor;
-}
+
 
 pub struct SynthPatch {
     oscillator_type: WavetableOscillator,
@@ -27,39 +24,43 @@ fn main() {
     let mut notes: Vec<Note> = Vec::new();
     patch.oscillator_type = square;
     patch.filter.filter_type = FilterType::LP;
-    patch.filter.filter_cutoff = 10;
+    patch.filter.filter_cutoff = 100;
 
-    notes.push(note_array[57]);
+    notes.push(note_array[45]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 600, &stream_handle);
     notes.clear();
-    notes.push(note_array[58]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 600, &stream_handle);
     notes.clear();
-    notes.push(note_array[60]);
+    notes.push(note_array[48]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 600, &stream_handle);
     notes.clear();
-    notes.push(note_array[58]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 300, &stream_handle);
     notes.clear();
-    notes.push(note_array[57]);
+    notes.push(note_array[45]);
     output::play_oscillator(&patch, &notes, 300, &stream_handle);
     notes.clear();
-    notes.push(note_array[62]);
+    notes.push(note_array[50]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 300, &stream_handle);
     notes.clear();
-    notes.push(note_array[60]);
+    notes.push(note_array[48]);
     output::play_oscillator(&patch, &notes, 300, &stream_handle);
     notes.clear();
-    notes.push(note_array[58]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 600, &stream_handle);
     notes.clear();
-    notes.push(note_array[57]);
+    notes.push(note_array[45]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 600, &stream_handle);
     notes.clear();
-    notes.push(note_array[58]);
+    notes.push(note_array[46]);
     output::play_oscillator(&patch, &notes, 300, &stream_handle);
     notes.clear();
-    notes.push(note_array[60]);
+    notes.push(note_array[48]);
     output::play_oscillator(&patch, &notes, 300, &stream_handle);
     notes.clear();
 }
