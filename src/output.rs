@@ -19,10 +19,10 @@ pub fn play_oscillator(patch: &SynthPatch, notes: &Vec<Note>, duration: u64, str
     let mut sink_stack: Vec<Sink> = Vec::new();
     
     for i in 0..notes.len() {
-        
+
         let mut oscillator = patch.oscillator_type.clone();
         oscillator.set_frequency(notes[i].frequency + 2.0);
-        oscillator.apply_filter(&patch.filter);
+        let oscillator =oscillator.apply_filter(&patch.filter);
         let sink = Sink::try_new(&stream_handle).unwrap();
         sink.append(oscillator.take_duration(Duration::from_millis(duration)).amplify(0.2));
         sink_stack.push(sink);

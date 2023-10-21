@@ -24,7 +24,7 @@ fn main() {
     let mut notes: Vec<Note> = Vec::new();
     patch.oscillator_type = square;
     patch.filter.filter_type = FilterType::LP;
-    patch.filter.filter_cutoff = 100;
+    patch.filter.filter_cutoff = 4000;
 
     notes.push(note_array[45]);
     notes.push(note_array[46]);
