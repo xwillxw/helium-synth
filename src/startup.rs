@@ -1,11 +1,7 @@
 use core::time::Duration;
 use rodio::source::{Source, BltFilter};
 
-#[allow(dead_code)]
-pub enum FilterType {
-    LP,
-    HP,
-}
+use crate::processing::filter_processor::{Filter,FilterType};
 
 #[derive(Clone)]
 pub struct WavetableOscillator {
@@ -28,20 +24,6 @@ pub struct Note {
 pub struct SynthPatch {
     pub oscillator_type: WavetableOscillator,
     pub filter: Filter,
-}
-
-pub struct Filter {
-    pub filter_type: FilterType,
-    pub filter_cutoff: u32
-}
-
-impl Filter {
-    pub fn new(new_filter_type: FilterType, new_filter_cutoff: u32) -> Filter {
-        return Filter {
-            filter_type: new_filter_type,
-            filter_cutoff: new_filter_cutoff,
-        };
-    }
 }
 
 impl WavetableOscillator {
@@ -86,7 +68,7 @@ impl WavetableOscillator {
             FilterType::HP => filtered_oscillator = self.clone().high_pass(current_filter.filter_cutoff),
         };
         
-        filtered_oscillator
+        return filtered_oscillator;
     }
 
 } 
@@ -144,7 +126,7 @@ pub fn generate_notes() -> [Note; 108] {
 
     //here are e templates used to generate a very large array of notes.
     let note_name_pattern: [char; 12] = ['C', 'C', 'D','D', 'E', 'F', 'F', 'G','G', 'A', 'A', 'B'];
-    let accidental_pattern: [bool; 12] = [false, true, false, false, true, false, true, false, false, true, false, true];
+    let accidental_pattern: [bool; 12] = [false, true, false, true, false, false, true, false, true, false, true, false];
     let note_frequency_pattern: [f32; 12] = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87];
     let octave_multiplier_base: i32 = 2;
 
@@ -187,9 +169,6 @@ pub fn generate_notes() -> [Note; 108] {
             note_frequencies[n] = note_frequency_pattern[frequency_index] * octave_multiplier_base.pow(oct as u32) as f32;
         }
 
-        //println!("{},{},{}", name_index, accidental_index, n);
-        //println!("{},{},{},{},", note_name_pattern[name_index], accidental_pattern[accidental_index], note_frequencies[n], oct);
-
         note_array[n] = Note::new(note_name_pattern[name_index], accidental_pattern[accidental_index], note_frequencies[n], oct);
 
         name_index = name_index + 1;
@@ -198,7 +177,7 @@ pub fn generate_notes() -> [Note; 108] {
     }
 
     //for i in 0..note_array.len() {
-    //    println!("{},{},{},{}", note_array[i].name, note_array[i].accidental, note_array[i].frequency, note_array[i].octave);
+    //    println!("{},{},{},{},{}", i, note_array[i].name, note_array[i].accidental, note_array[i].frequency, note_array[i].octave);
     //}
 
     note_array
