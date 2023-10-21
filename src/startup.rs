@@ -26,6 +26,7 @@ pub struct SynthPatch {
 }
 
 impl WavetableOscillator {
+    #[inline]
     pub fn new(sample_rate: u32, wave_table: Vec<f32>) -> WavetableOscillator {
         return WavetableOscillator {
             sample_rate: sample_rate,
@@ -34,11 +35,13 @@ impl WavetableOscillator {
             index_increment: 0.0,
         };
     }
-
+    
+    #[inline]
     pub fn set_frequency(&mut self, frequency: f32) {
         self.index_increment = frequency * self.wave_table.len() as f32 / self.sample_rate as f32;
     }
 
+    #[inline]
     fn get_sample(&mut self) -> f32 {
         let sample = self.lerp();
         self.index += self.index_increment;
@@ -46,6 +49,7 @@ impl WavetableOscillator {
         return sample;
     }
 
+    #[inline]
     fn lerp(&self) -> f32 {
         let truncated_index = self.index as usize;
         let next_index = (truncated_index + 1) % self.wave_table.len();
@@ -59,7 +63,7 @@ impl Source for WavetableOscillator {
     fn channels(&self) -> u16 {
         return 1;
     }
-
+    
     fn sample_rate(&self) -> u32 {
         return self.sample_rate;
     }   
@@ -82,6 +86,7 @@ impl Iterator for WavetableOscillator {
 }
 
 impl Note {
+    #[inline]
     fn new(name: char, accidental: bool,frequency: f32, octave: i32) -> Note {
         return Note {
             name: name,

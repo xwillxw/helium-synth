@@ -22,7 +22,6 @@ impl Filter {
     }
 }
 
-//  -> BltFilter<WavetableOscillator> 
 pub fn apply_filter(oscillator: WavetableOscillator, current_filter: &Filter) -> BltFilter<WavetableOscillator>{
     
     let filtered_oscillator: BltFilter<WavetableOscillator>;
