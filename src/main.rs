@@ -23,13 +23,17 @@ fn main() {
     let mut patch = generate_patch();
     let note_array = startup::generate_notes();
     let mut notes: Vec<Note> = Vec::new();
-    patch.oscillator_type = square;
+    patch.oscillator_type = saw;
     patch.filter.filter_type = FilterType::LP;
-    patch.filter.filter_cutoff = 4000;
+    patch.filter.filter_cutoff = 20000;
 
     // notes.push(note_array[46]);
     // output::play_oscillator(&patch, &notes, 400, &stream_handle);
     // notes.clear();
+
+    // this sucks
+    // make it better and add sequencer please
+    // also use midi moron
 
     notes.push(note_array[58]);
     play_oscillator(&patch, &notes, 200, &stream_handle);
